@@ -1,0 +1,34 @@
+ <ul class="list-unstyled">
+    {% for scorecriteria in scorecriterias %}
+    <li>
+        <i class="fa-solid fa-check fa-lg" style="color: #74C0FC;"></i>
+        {% if not hides_percent %}
+            {% if hides_AND_relation %}
+                {{scorecriteria.display_with_short_relation|linebreaksbr}}
+            {% else %}
+                {{scorecriteria|linebreaksbr}}
+            {% endif %}
+        {% else %}
+            {{scorecriteria.description|linebreaksbr}}
+        {% endif %}
+
+        {% if scorecriteria.has_children %}
+        <ul class="list-unstyled" type="a">
+            {% for schild in scorecriteria.childs.all %}
+            <li class="list-child">
+                <i class="fa-solid fa-arrow-right fa-sm" style="color: #74C0FC;"></i>
+                {% if not hides_percent %}
+                    {{schild|linebreaksbr}}
+                {% else %}
+                    {{schild.description|linebreaksbr}}
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </li>
+    {% empty %}
+        {{ row.default_message|safe }}
+    {% endfor %}
+</ul>
+

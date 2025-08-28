@@ -2,9 +2,7 @@
 {% load static %}
 
 {% block content %}
-  <head>
-	  <link rel="stylesheet" href="{% static 'css/criteria_table.css' %}">
-  </head>
+	<link rel="stylesheet" href="{% static 'css/criteria_table.css' %}">
   <div class="container">
     <div class="row">
       <div class="col-md-12 project-major-pages">	
@@ -24,7 +22,7 @@
 	
 	{% with True as is_faculty_row_visible %}
 	  {% with True as is_edit_link_hidden %}
-	    {% include "criteria/include/criteria_table.html" %}
+	    {% include "criteria/include/criteria_table_2.html" %}
 	  {% endwith %}
 	{% endwith %}
       </div>

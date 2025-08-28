@@ -190,7 +190,7 @@ def prepare_admission_criteria(admission_criterias, curriculum_majors, combine_m
         criteria.curriculum_major_admission_criteria_count = len(criteria.curriculum_major_admission_criterias)
         criteria.curriculum_majors = [mj.curriculum_major for mj in criteria.curriculum_major_admission_criterias]
         curriculum_majors_with_criterias += criteria.curriculum_majors
-
+    
     curriculum_majors_with_criteria_ids = set([m.id for m
                                                in curriculum_majors_with_criterias])
 
@@ -204,7 +204,7 @@ def prepare_admission_criteria(admission_criterias, curriculum_majors, combine_m
 
     if combine_majors:
         admission_criteria_rows = combine_criteria_rows(admission_criteria_rows)
-
+    
     return sort_admission_criteria_rows(admission_criteria_rows), free_curriculum_majors
 
 def get_all_curriculum_majors(project, faculty=None):
@@ -420,6 +420,65 @@ def show_project(request, project_id, faculty_id=None):
     
     return render(request,
                   'criteria/report_index.html',
+                  {'project': project,
+                   'admission_criteria_rows': admission_criteria_rows,
+                   'free_curriculum_majors': free_curriculum_majors,
+                   'shows_min_criteria_in_table': shows_min_criteria_in_table,
+                   'shows_scoring_criteria_percent': shows_scoring_criteria_percent,
+                   'hides_scoring_prefix_dash': hides_scoring_prefix_dash,
+                   'hides_percent': hides_percent,
+                   })
+
+
+# temp
+def test_view(request, project_id, faculty_id=None):
+    if HIDE_CRITERIA:
+        return HttpResponseForbidden()
+    
+    project = get_object_or_404(AdmissionProject, pk=project_id)
+    if not project.major_detail_visible:
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+
+    faculties = Faculty.objects.all()
+    
+    admission_criterias = (AdmissionCriteria
+                           .objects
+                           .filter(admission_project_id=project_id,
+                                   is_deleted=False)
+                           .order_by('faculty_id'))
+
+    curriculum_majors = get_all_curriculum_majors(project)
+    admission_criteria_rows, free_curriculum_majors = prepare_admission_criteria(admission_criterias, curriculum_majors, True)
+
+    free_curriculum_majors = []
+
+    shows_min_criteria_in_table = project_id in []
+    shows_scoring_criteria_percent = project_id in []
+    hides_percent = (project.default_round_number == 1)
+    hides_scoring_prefix_dash = False # project_id == 28
+
+    for r in admission_criteria_rows:
+        campus_id = r['criterias'][0].faculty.campus_id
+        if campus_id in DEFAULT_MESSAGES:
+            r['default_message'] = DEFAULT_MESSAGES[campus_id]
+    
+    if shows_min_criteria_in_table:
+        for r in admission_criteria_rows:
+            for c in r['criterias']:
+                c.min_score_cols, c.min_score_others = extract_min_scores_json(c.min_scores_json)
+
+    if shows_scoring_criteria_percent:
+        for r in admission_criteria_rows:
+            for c in r['criterias']:
+                c.scoring_score_cols = extract_scoring_scores_json(c.scoring_scores_json)
+                
+    # print("debug here", admission_criteria_rows)
+    for row in admission_criteria_rows:
+        print("criterias:", row["criterias"])
+    
+    return render(request,
+                  'criteria/test.html',
                   {'project': project,
                    'admission_criteria_rows': admission_criteria_rows,
                    'free_curriculum_majors': free_curriculum_majors,

@@ -1,0 +1,94 @@
+  {% for row in admission_criteria_rows %}
+    {% with curriculum_major_admission_criterias=row.majors criterias=row.criterias major_count=row.major_count criteria_count=row.criteria_count %}
+
+      {% if is_faculty_row_visible %}
+		{% with collapse_faculty_id=criterias.0.faculty.id majorcriteria=curriculum_major_admission_criterias.0 %} 
+		{% with collapse_major_id=majorcriteria.id major_title=majorcriteria.curriculum_major.cupt_code %}
+			{% ifchanged criterias.0.faculty %}
+				<!-- คณะ -->
+				<h2 class="faculty-title" type="button" data-bs-toggle="collapse" data-bs-target="#{{ collapse_faculty_id }}" aria-expanded="false" aria-controls="{{ collapse_faculty_id }}">
+					{{ criterias.0.faculty }} ({{ criterias.0.faculty.campus.title }})
+				</h2>
+			{% endifchanged  %}
+
+			<div
+			id="{{ collapse_faculty_id }}"
+			class="major-block collapse">
+				<!-- สาขาย่อย -->
+				{% if major_count > 0 %}
+				    <div
+					class="major-title collapsed"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#{{ collapse_major_id }}"
+					aria-expanded="false"
+					aria-controls="{{ collapse_major_id }}">			
+							{% comment %} คณะที่มีเงื่อนไขเดียวกัน เกณฑ์การพิจารณา เดียวกัน {% endcomment %}
+							{% for majorcriteria in curriculum_major_admission_criterias %}
+									<div>
+										{{majorcriteria.curriculum_major.cupt_code}}
+									</div>
+							{% endfor %}
+					</div>
+				{% else %}
+					<div>
+						(ยังไม่ได้ระบุสาขา)
+					</div>
+				{% endif %}
+
+				{% comment %} เงื่อนไขขั้นต่ำ && เกณฑ์การพิจารณา && จำนวนรับ {% endcomment %}
+				<div
+					id="{{ collapse_major_id }}"
+					class="condition collapse"
+					data-bs-parent="#{{ collapse_faculty_id }}">
+					{% comment %} เงื่อนไขขั้นต่ำ && เกณฑ์การพิจารณา {% endcomment %}
+					{% with criterias.0 as admission_criteria %}
+						{% include "criteria/include/criteria_table_scorecriteria_cols_2.html" %}
+					{% endwith %}
+					
+					{% comment %} จำนวนรับ {% endcomment %}
+					<div>
+						<div class="min-criteria-title">จำนวนรับ </div>
+						<table class="table w-75">
+							<tbody>
+								{% for majorcriteria in curriculum_major_admission_criterias %}
+								<tr>
+									<td>{{ majorcriteria.curriculum_major.cupt_code }}</td>
+									<td class="text-end">
+										{% if majorcriteria.slots != 0 %}
+											{{ majorcriteria.slots }}
+										{% else %}
+											*จำนวนรับรวมกับเงื่อนไขอื่น
+										{% endif %}
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+			</div>
+		{% endwith %} 
+		{% endwith %}
+      {% endif %}
+
+	  {% comment %} คือไรวะเนี่ย ถ้าใส่ให้เป็นจริงจะได้ เงื่อนไขพิจารณาออกมาซ้ำอีกรอบ แตาไม่เข้าใจว่ามีไปทำไม {% endcomment %}
+      {% if criteria_count > 0 %}
+		{% for item in criterias %}
+			{% if not forloop.first %}
+				{% with item as admission_criteria %}
+				<tr>
+				{% include "criteria/include/criteria_table_scorecriteria_cols_2.html" %}
+				</tr>
+				{% endwith %}
+			{% endif %}
+		{% endfor %}
+      {% endif %}
+
+
+    {% endwith %}
+  {% endfor %}
+
+<!-- Bootstrap Bundle with Popper (JS) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

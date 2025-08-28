@@ -1,0 +1,51 @@
+{% if not shows_min_criteria_in_table %}
+  <div class="min-criteria">
+    <span class="criteria-ids" style="display: none;">#{{ admission_criteria.id }}<br></span>
+
+    {% comment %} เงื่อนไขขั้นต่ำ {% endcomment %}
+    {% with scorecriterias=admission_criteria.get_all_required_score_criteria hides_percent=False hides_AND_relation=True %}
+      <div class="min-criteria-title">เงื่อนไขขั้นต่ำ</div>
+      {% include "criteria/include/scorecriteria_list_2.html" %}
+    {% endwith %}
+    
+    {% comment %} คำอธิบายหลักสูตรหลายเงื่อนไขเพิ่มเติม สำหรับผู้สมัคร {% endcomment %}
+    {% if admission_criteria.additional_description %}
+        <div class="min-criteria-title">คำอธิบายหลักสูตรหลายเงื่อนไขเพิ่มเติม สำหรับผู้สมัคร </div>
+        {{ admission_criteria.additional_description }}<br>
+    {% endif %}
+   
+    {% comment %} คำอธิบายเงื่อนไขเพิ่มเติม สำหรับผู้สมัคร {% endcomment %}
+    {% if admission_criteria.additional_condition %}
+      <div class="min-criteria-title">คำอธิบายเงื่อนไขเพิ่มเติม สำหรับผู้สมัคร </div>
+      {{ admission_criteria.additional_condition }}<br>
+    {% endif %}
+  </div>
+{% else %}
+  {% for sc in admission_criteria.min_score_cols %}
+    <div>{{ sc|floatformat:-2 }}</div>
+  {% endfor %}
+  <div>
+     {% for k,v in admission_criteria.min_score_others %}
+      {% if k != 'additional_condition' %}
+	-&#160;{{ k }}&#160;&#8805;&#160;{{ v|floatformat:-2 }}<br>
+      {% else %}
+	-&#160;{{ v }}<br>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% comment %} เกณฑ์การพิจารณา {% endcomment %}
+<div>
+  <span class="criteria-ids" style="display: none;">#{{ admission_criteria.id }}<br></span>
+  <div class="min-criteria-title">เกณฑ์การพิจารณา</div>
+  {% if not shows_scoring_criteria_percent %}
+    {% with scorecriterias=admission_criteria.get_all_scoring_score_criteria %}
+      {% include "criteria/include/scorecriteria_list_2.html" %}
+    {% endwith %}
+  {% else %}
+    {% for sc, percent in admission_criteria.scoring_score_cols %}
+      {% if not hides_scoring_prefix_dash %}-&#160;{% endif %}{{ sc }}{% if not hides_percent %}&#160;({{ percent|floatformat:-2 }}%){% endif %}<br>
+    {% endfor %}
+  {% endif %}
+</div>

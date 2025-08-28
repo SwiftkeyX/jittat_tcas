@@ -3,7 +3,7 @@ from django.db import models
 from majors.models import AdmissionProject, AdmissionRound
 from majors.models import Major, Faculty, Campus
 
-
+# มี additional condition, additional description, additional interview condition
 class AdmissionCriteria(models.Model):
     admission_project = models.ForeignKey(AdmissionProject,
                                           on_delete=models.CASCADE)
@@ -72,6 +72,7 @@ class AdmissionCriteria(models.Model):
             for sc in lst:
                 sc.cache_children(all_score_criterias)
 
+# มี description เงื่อนไข เกณฑ์การพิจารณา
 class ScoreCriteria(models.Model):
     admission_criteria = models.ForeignKey(AdmissionCriteria,
                                            on_delete=models.CASCADE)
@@ -199,7 +200,8 @@ COMPONENT_WEIGHT_TYPE_CHOICES = [
     ('CW92276','9.2 (รูปแบบที่ 2 PAT 7.6 บาลี): กลุ่ม 9 มนุษย์ศาสตร์และสังคมศาสตร์ - พื้นฐานศิลปศาสตร์ (รูปแบบที่ 2)'),
     ('CW92277','9.2 (รูปแบบที่ 2 PAT 7.7 เกาหลี): กลุ่ม 9 มนุษย์ศาสตร์และสังคมศาสตร์ - พื้นฐานศิลปศาสตร์ (รูปแบบที่ 2)'),
 ]
-        
+
+# มี title ชื่อสาขาย่อยที่ใช้ในการดูเงื่อนไข เกณฑ์การพิจารณา, titleสาขานี้ มี list บอกว่า มีอยู่ในโครงการอะไรบ้าง
 class MajorCuptCode(models.Model):
     program_code = models.CharField(max_length=30)
     program_type = models.CharField(max_length=30)
@@ -237,6 +239,7 @@ class MajorCuptCode(models.Model):
         else:
             return f'{self.title} ({self.program_type})'
 
+# join table
 class CurriculumMajor(models.Model):
     admission_project = models.ForeignKey(AdmissionProject,
                                           on_delete=models.CASCADE)
@@ -281,6 +284,7 @@ class CurriculumMajor(models.Model):
                     added.add(ch[0])
         return choices
         
+# join table
 class CurriculumMajorAdmissionCriteria(models.Model):
     """
     This is the join table.

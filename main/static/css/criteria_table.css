@@ -1,0 +1,45 @@
+.faculty-title {
+    color: #008FA5;
+    font-weight: bold;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.major-block {
+  margin-bottom: 0.3rem;
+}
+
+.major-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+    width: 100%;
+}
+
+.major-title.collapsed {
+  border: 10px solid #E5E5E5;
+  background-color: #E5E5E5;
+}
+
+.major-title:not(.collapsed) {
+  border: 10px solid #BEE5EB;
+  background-color: #BEE5EB;
+}
+
+.condition {
+  border: 2px solid #BEE5EB;
+  width: 100%;
+  padding: 20px;
+  padding-top: 10px;
+}
+
+.min-criteria-title {
+    font-size: clamp(1rem, 2vw + 1rem, 1.5rem) !important;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.list-child {
+  margin-left: 2rem;
+}
