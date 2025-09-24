@@ -90,9 +90,11 @@
 	{% endif %}
       {% endfor %}
 
-      {% if criteria_count > 0 %}
+		{% comment %} {% if criteria_count > 0 %} {% endcomment %}
+      {% if 1 %}
 	{% for item in criterias %}
-	  {% if not forloop.first %}
+	  {% comment %} {% if not forloop.first %} {% endcomment %}
+	  {% if 1 %}
 	    {% with item as admission_criteria %}
 	      <tr>
 		{% include "criteria/include/criteria_table_scorecriteria_cols.html" %}
@@ -101,6 +103,7 @@
 	  {% endif %}
 	{% endfor %}
       {% endif %}
+	  
     {% endwith %}
   {% endfor %}
   {% if is_faculty_row_visible %}

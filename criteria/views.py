@@ -7,6 +7,9 @@ from django.http import HttpResponseForbidden
 from majors.models import Faculty, Campus, AdmissionProject, AdmissionRound
 from .models import CurriculumMajor, MajorCuptCode, AdmissionCriteria
 
+# debug
+from django.forms.models import model_to_dict
+
 HIDE_CRITERIA = False
 
 DEFAULT_CAMPUS_ID = 1
@@ -197,6 +200,7 @@ def prepare_admission_criteria(admission_criterias, curriculum_majors, combine_m
     free_curriculum_majors = [m for m in curriculum_majors
                               if m.id not in curriculum_majors_with_criteria_ids]
 
+    # admission_criteria_rows.majors คือการเรียก curriculum_major_admission_criterias ผ่าน FK ของ admission_criterias
     admission_criteria_rows = [{'majors': c.curriculum_major_admission_criterias,
                                 'criterias': [c],
                                 'major_count': len(c.curriculum_major_admission_criterias),
@@ -204,6 +208,19 @@ def prepare_admission_criteria(admission_criterias, curriculum_majors, combine_m
 
     if combine_majors:
         admission_criteria_rows = combine_criteria_rows(admission_criteria_rows)
+    
+    # debug wat is admission_criterai_rows? => 
+    # for i in admission_criteria_rows[:10]:
+    #     print("debug here", i)
+    # for i in admission_criteria_rows[:2]:
+    #     values = i.values()
+    #     for j in (values):
+    #         inside2 = j
+    #         if isinstance(inside2, list):
+    #             for k in inside2:
+    #                 print("debug inside", k)
+    #                 print(model_to_dict(k))
+    #     print("")
     
     return sort_admission_criteria_rows(admission_criteria_rows), free_curriculum_majors
 
@@ -387,6 +404,8 @@ def show_project(request, project_id, faculty_id=None):
 
     faculties = Faculty.objects.all()
     
+    # admission_criterias ถูกกรองด้วย project_id 
+    # project_id คือรหัสของแต่ละโครงงาน
     admission_criterias = (AdmissionCriteria
                            .objects
                            .filter(admission_project_id=project_id,
@@ -473,9 +492,9 @@ def test_view(request, project_id, faculty_id=None):
             for c in r['criterias']:
                 c.scoring_score_cols = extract_scoring_scores_json(c.scoring_scores_json)
                 
-    # print("debug here", admission_criteria_rows)
-    for row in admission_criteria_rows:
-        print("criterias:", row["criterias"])
+    # debug
+    # for row in admission_criteria_rows:
+    #     print("criterias:", row["criterias"])
     
     return render(request,
                   'criteria/test.html',

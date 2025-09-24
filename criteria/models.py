@@ -3,7 +3,7 @@ from django.db import models
 from majors.models import AdmissionProject, AdmissionRound
 from majors.models import Major, Faculty, Campus
 
-# มี additional condition, additional description, additional interview condition
+# เก็บ Curriculum_Major_json ที่มี additional condition, additional description, additional interview condition
 class AdmissionCriteria(models.Model):
     admission_project = models.ForeignKey(AdmissionProject,
                                           on_delete=models.CASCADE)
@@ -201,7 +201,7 @@ COMPONENT_WEIGHT_TYPE_CHOICES = [
     ('CW92277','9.2 (รูปแบบที่ 2 PAT 7.7 เกาหลี): กลุ่ม 9 มนุษย์ศาสตร์และสังคมศาสตร์ - พื้นฐานศิลปศาสตร์ (รูปแบบที่ 2)'),
 ]
 
-# มี title ชื่อสาขาย่อยที่ใช้ในการดูเงื่อนไข เกณฑ์การพิจารณา, titleสาขานี้ มี list บอกว่า มีอยู่ในโครงการอะไรบ้าง
+# มี title เป็นชื่อสาขาย่อยที่ใช้ในการดูเงื่อนไข และเกณฑ์การพิจารณา, title สาขานี้ มี list บอกว่า มีอยู่ในโครงการอะไรบ้าง (เช่น มีสาขาย่อย "วิชาอาหาร" ในโครงการที่ 2 )
 class MajorCuptCode(models.Model):
     program_code = models.CharField(max_length=30)
     program_type = models.CharField(max_length=30)

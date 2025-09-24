@@ -1,15 +1,21 @@
   {% for row in admission_criteria_rows %}
+  {% comment %} <div>main- {{admission_criteria_rows}}</div> {% endcomment %}
+  {% comment %} debug here - {{row}} <br> {% endcomment %}
+  {% comment %} ตรงนี้หาว่าทำไม admission_criteria_rows.majors คืออะไร => มันหาอะไรใน Db ถึงได้ค่ากลับมาเป็นลิสที่มีเงื่อนไขเดียวกัน => มันคือ CurriculumMajorAdmissionCriteria ที่ใช้ AdmissionCriteria เดียวกัน {% endcomment %}
     {% with curriculum_major_admission_criterias=row.majors criterias=row.criterias major_count=row.major_count criteria_count=row.criteria_count %}
-
       {% if is_faculty_row_visible %}
 		{% with collapse_faculty_id=criterias.0.faculty.id majorcriteria=curriculum_major_admission_criterias.0 %} 
-		{% with collapse_major_id=majorcriteria.id major_title=majorcriteria.curriculum_major.cupt_code %}
+		{% with collapse_major_id=majorcriteria.id%}
 			{% ifchanged criterias.0.faculty %}
 				<!-- คณะ -->
-				<h2 class="faculty-title" type="button" data-bs-toggle="collapse" data-bs-target="#{{ collapse_faculty_id }}" aria-expanded="false" aria-controls="{{ collapse_faculty_id }}">
-					{{ criterias.0.faculty }} ({{ criterias.0.faculty.campus.title }})
-				</h2>
+				 <div class="d-flex px-2 align-items-center faculty-title" type="button" data-bs-toggle="collapse" data-bs-target="#{{ collapse_faculty_id }}" aria-expanded="false" aria-controls="{{ collapse_faculty_id }}">
+					{% comment %} <h2 class="mr-3">{{ forloop.counter }}</h2> {% endcomment %}
+					<h4>
+						{{ criterias.0.faculty }} ({{ criterias.0.faculty.campus.title }})
+					</h4>
+				 </div>
 			{% endifchanged  %}
+			{% comment %} Debug - criteria - {{criterias}} <br> {% endcomment %}
 
 			<div
 			id="{{ collapse_faculty_id }}"
@@ -26,9 +32,11 @@
 							{% comment %} คณะที่มีเงื่อนไขเดียวกัน เกณฑ์การพิจารณา เดียวกัน {% endcomment %}
 							{% for majorcriteria in curriculum_major_admission_criterias %}
 									<div>
-										{{majorcriteria.curriculum_major.cupt_code}}
+										{% comment %} Debug - major group - {{curriculum_major_admission_criterias}} <br>
+										Debug - major - {{majorcriteria}} <br>  {% endcomment %}
+ 										{{majorcriteria.curriculum_major.cupt_code}}
 									</div>
-							{% endfor %}
+							{% endfor %} 
 					</div>
 				{% else %}
 					<div>
@@ -66,8 +74,8 @@
 							</tbody>
 						</table>
 					</div>
-
 				</div>
+				
 			</div>
 		{% endwith %} 
 		{% endwith %}
@@ -75,8 +83,10 @@
 
 	  {% comment %} คือไรวะเนี่ย ถ้าใส่ให้เป็นจริงจะได้ เงื่อนไขพิจารณาออกมาซ้ำอีกรอบ แตาไม่เข้าใจว่ามีไปทำไม {% endcomment %}
       {% if criteria_count > 0 %}
+	  {% comment %} {% if 1 %}  {% endcomment %}
 		{% for item in criterias %}
 			{% if not forloop.first %}
+			{% comment %} {% if 1 %} {% endcomment %}
 				{% with item as admission_criteria %}
 				<tr>
 				{% include "criteria/include/criteria_table_scorecriteria_cols_2.html" %}
@@ -85,7 +95,6 @@
 			{% endif %}
 		{% endfor %}
       {% endif %}
-
 
     {% endwith %}
   {% endfor %}

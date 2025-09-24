@@ -1,7 +1,8 @@
  <ul class="list-unstyled">
     {% for scorecriteria in scorecriterias %}
     <li>
-        <i class="fa-solid fa-check fa-lg" style="color: #74C0FC;"></i>
+        {% comment %} <i class="fa-solid fa-check fa-lg" style="color: #74C0FC;"></i> {% endcomment %}
+        <i class="fa-solid fa-{{ forloop.counter }} fa-xs" style="color: #00a876;"></i>
         {% if not hides_percent %}
             {% if hides_AND_relation %}
                 {{scorecriteria.display_with_short_relation|linebreaksbr}}
@@ -16,7 +17,7 @@
         <ul class="list-unstyled" type="a">
             {% for schild in scorecriteria.childs.all %}
             <li class="list-child">
-                <i class="fa-solid fa-arrow-right fa-sm" style="color: #74C0FC;"></i>
+                <i class="fa-solid fa-{{ forloop.counter }} fa-xs" style="color: #00a876;"></i>
                 {% if not hides_percent %}
                     {{schild|linebreaksbr}}
                 {% else %}
@@ -31,4 +32,3 @@
         {{ row.default_message|safe }}
     {% endfor %}
 </ul>
-
