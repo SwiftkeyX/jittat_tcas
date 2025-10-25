@@ -1,7 +1,8 @@
-  {% for row in admission_criteria_rows %}
+{% for row in admission_criteria_rows %}
   {% comment %} <div>main- {{admission_criteria_rows}}</div> {% endcomment %}
   {% comment %} debug here - {{row}} <br> {% endcomment %}
   {% comment %} ตรงนี้หาว่าทำไม admission_criteria_rows.majors คืออะไร => มันหาอะไรใน Db ถึงได้ค่ากลับมาเป็นลิสที่มีเงื่อนไขเดียวกัน => มันคือ CurriculumMajorAdmissionCriteria ที่ใช้ AdmissionCriteria เดียวกัน {% endcomment %}
+  {% comment %} ต่อไปจะหาว่า admission_criteria_rows.criterias คืออะไร  {% endcomment %}
     {% with curriculum_major_admission_criterias=row.majors criterias=row.criterias major_count=row.major_count criteria_count=row.criteria_count %}
       {% if is_faculty_row_visible %}
 		{% with collapse_faculty_id=criterias.0.faculty.id majorcriteria=curriculum_major_admission_criterias.0 %} 
@@ -15,7 +16,6 @@
 					</h4>
 				 </div>
 			{% endifchanged  %}
-			{% comment %} Debug - criteria - {{criterias}} <br> {% endcomment %}
 
 			<div
 			id="{{ collapse_faculty_id }}"
@@ -32,8 +32,8 @@
 							{% comment %} คณะที่มีเงื่อนไขเดียวกัน เกณฑ์การพิจารณา เดียวกัน {% endcomment %}
 							{% for majorcriteria in curriculum_major_admission_criterias %}
 									<div>
-										{% comment %} Debug - major group - {{curriculum_major_admission_criterias}} <br>
-										Debug - major - {{majorcriteria}} <br>  {% endcomment %}
+										{% comment %} Debug - major group - {{curriculum_major_admission_criterias}} <br> {% endcomment %}
+										{% comment %} Debug - major - {{majorcriteria}} <br> {% endcomment %}
  										{{majorcriteria.curriculum_major.cupt_code}}
 									</div>
 							{% endfor %} 
@@ -49,11 +49,66 @@
 					id="{{ collapse_major_id }}"
 					class="condition collapse"
 					data-bs-parent="#{{ collapse_faculty_id }}">
-					{% comment %} เงื่อนไขขั้นต่ำ && เกณฑ์การพิจารณา {% endcomment %}
-					{% with criterias.0 as admission_criteria %}
-						{% include "criteria/include/criteria_table_scorecriteria_cols_2.html" %}
-					{% endwith %}
 					
+					{% comment %} เงื่อนไขขั้นต่ำ && เกณฑ์การพิจารณา {% endcomment %}
+					{% with id_string=majorcriteria.id|stringformat:"s" %}
+						{% with slider_id="critSlider-"|add:id_string %}
+						{% comment %} debug - {{ curriculum_major_admission_criterias }} <br>
+						debug - {{ criterias }} <br> {% endcomment %}
+						<div id="{{ slider_id }}" class="carousel slide" data-bs-touch="true" data-bs-interval="false">
+							
+							{% comment %} indicator {% endcomment %}
+							<div class="carousel-indicators px-2">
+								{% for item in criterias %}
+									<button type="button"
+											data-bs-target="#{{ slider_id }}"
+											data-bs-slide-to="{{ forloop.counter0 }}"
+											class="{% if forloop.first %}active{% endif %} mx-1"
+											aria-current="{% if forloop.first %}true{% endif %}"
+											aria-label="Slide {{ forloop.counter }}">
+									</button>
+								{% endfor %}
+							</div>
+
+							{% comment %} slider child {% endcomment %}
+							<div class="carousel-inner">
+								
+								{% comment %} เงื่อนไขขั้นต่ำ && เกณฑ์การพิจารณา {% endcomment %}
+								<div class="carousel-item active">
+									{% with criterias.0 as admission_criteria %}
+										{% include "criteria/include/criteria_table_scorecriteria_cols_2.html" %}
+									{% endwith %}
+								</div>
+
+								{% comment %} กรณีที่มีเงื่อนไขมากกว่า 1 ให้แสดงให้ครบ (เงื่อนไขขั้นต่ำ && เกณฑ์การพิจารณา) {% endcomment %}
+								{% if criteria_count > 0 %}
+										{% for item in criterias %}
+											{% comment %} debug - {{ criterias }} <br> {% endcomment %}
+											{% if not forloop.first %}
+												<div class="carousel-item">
+													{% with item as admission_criteria %}
+														{% include "criteria/include/criteria_table_scorecriteria_cols_2.html" %}
+													{% endwith %}
+												</div>
+											{% endif %}
+										{% endfor %}
+								{% endif %}
+
+							</div>
+
+							{# arrows #}
+							<button class="carousel-control-prev" type="button" data-bs-target="#{{ slider_id }}" data-bs-slide="prev">
+									<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+									<span class="visually-hidden">Previous</span>
+							</button>
+							<button class="carousel-control-next" type="button" data-bs-target="#{{ slider_id }}" data-bs-slide="next">
+									<span class="carousel-control-next-icon" aria-hidden="true"></span>
+									<span class="visually-hidden">Next</span>
+							</button>
+						</div>
+						{% endwith %}
+					{% endwith %}
+
 					{% comment %} จำนวนรับ {% endcomment %}
 					<div>
 						<div class="min-criteria-title">จำนวนรับ </div>
@@ -74,26 +129,12 @@
 							</tbody>
 						</table>
 					</div>
+
 				</div>
 				
 			</div>
 		{% endwith %} 
 		{% endwith %}
-      {% endif %}
-
-	  {% comment %} คือไรวะเนี่ย ถ้าใส่ให้เป็นจริงจะได้ เงื่อนไขพิจารณาออกมาซ้ำอีกรอบ แตาไม่เข้าใจว่ามีไปทำไม {% endcomment %}
-      {% if criteria_count > 0 %}
-	  {% comment %} {% if 1 %}  {% endcomment %}
-		{% for item in criterias %}
-			{% if not forloop.first %}
-			{% comment %} {% if 1 %} {% endcomment %}
-				{% with item as admission_criteria %}
-				<tr>
-				{% include "criteria/include/criteria_table_scorecriteria_cols_2.html" %}
-				</tr>
-				{% endwith %}
-			{% endif %}
-		{% endfor %}
       {% endif %}
 
     {% endwith %}

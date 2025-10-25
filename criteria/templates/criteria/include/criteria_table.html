@@ -38,6 +38,7 @@
   {% for row in admission_criteria_rows %}
     {% with curriculum_major_admission_criterias=row.majors criterias=row.criterias major_count=row.major_count criteria_count=row.criteria_count %}
 
+  	<!-- คณะ -->
       {% if is_faculty_row_visible %}
 	{% ifchanged criterias.0.faculty %}
 	  <tr class="table-info">
@@ -48,6 +49,7 @@
 	{% endifchanged  %}
       {% endif %}
 
+	<!-- สาขาย่อย -->
       <tr class="{% if major_count == 0 %}table-warning{% endif %}">
 	{% if major_count > 0 %}
 	  {% with curriculum_major_admission_criterias.0 as majorcriteria %}
@@ -74,27 +76,27 @@
       </tr>
       
       {% for majorcriteria in curriculum_major_admission_criterias %}
-	{% if not forloop.first %}
-	  <tr>
-	    <td>
-	      {{majorcriteria.curriculum_major.cupt_code}}
-	    </td>
-	    <td class="text-center">
-	      {% if majorcriteria.slots != 0 %}
-  		{{majorcriteria.slots}}
-	      {% else %}
-		*จำนวนรับรวมกับเงื่อนไขอื่น
-	      {% endif %}
-	    </td>
-	  </tr>
-	{% endif %}
+		{% if not forloop.first %}
+		<tr>
+			<td>
+			{{majorcriteria.curriculum_major.cupt_code}}
+			</td>
+			<td class="text-center">
+			{% if majorcriteria.slots != 0 %}
+			{{majorcriteria.slots}}
+			{% else %}
+			*จำนวนรับรวมกับเงื่อนไขอื่น
+			{% endif %}
+			</td>
+		</tr>
+		{% endif %}
       {% endfor %}
 
-		{% comment %} {% if criteria_count > 0 %} {% endcomment %}
-      {% if 1 %}
+		{% if criteria_count > 0 %}
+      	{% comment %} {% if 1 %} {% endcomment %}
 	{% for item in criterias %}
-	  {% comment %} {% if not forloop.first %} {% endcomment %}
-	  {% if 1 %}
+	  {% if not forloop.first %}
+	  {% comment %} {% if 1 %} {% endcomment %}
 	    {% with item as admission_criteria %}
 	      <tr>
 		{% include "criteria/include/criteria_table_scorecriteria_cols.html" %}

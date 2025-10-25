@@ -1,5 +1,5 @@
 .faculty-title {
-    color: #008FA5;
+    color: black;
     font-weight: bold;
     margin-top: 2rem;
 }
@@ -40,4 +40,9 @@
 
 .list-child {
   margin-left: 2rem;
+}
+
+/* make active slide indicator black for easier to notice */
+.carousel-indicators .active {
+  background-color: black !important;
 }

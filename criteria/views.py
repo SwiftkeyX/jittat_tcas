@@ -212,6 +212,7 @@ def prepare_admission_criteria(admission_criterias, curriculum_majors, combine_m
     # debug wat is admission_criterai_rows? => 
     # for i in admission_criteria_rows[:10]:
     #     print("debug here", i)
+    
     # for i in admission_criteria_rows[:2]:
     #     values = i.values()
     #     for j in (values):
@@ -492,9 +493,19 @@ def test_view(request, project_id, faculty_id=None):
             for c in r['criterias']:
                 c.scoring_score_cols = extract_scoring_scores_json(c.scoring_scores_json)
                 
-    # debug
+    # # debug
     # for row in admission_criteria_rows:
-    #     print("criterias:", row["criterias"])
+    #     # print("criterias:", row["criterias"])
+    #     for i in row["criterias"]:
+    #         print("inside: ", model_to_dict(i))
+    #         print()
+    
+    # debug
+    for i in admission_criterias:
+        if len([i]) >= 2:
+            print("admission_criterias: ", model_to_dict(i))
+            print()
+    
     
     return render(request,
                   'criteria/test.html',
