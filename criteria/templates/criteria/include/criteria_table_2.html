@@ -53,9 +53,12 @@
 					{% comment %} เงื่อนไขขั้นต่ำ && เกณฑ์การพิจารณา {% endcomment %}
 					{% with id_string=majorcriteria.id|stringformat:"s" %}
 						{% with slider_id="critSlider-"|add:id_string %}
-						{% comment %} debug - {{ curriculum_major_admission_criterias }} <br>
-						debug - {{ criterias }} <br> {% endcomment %}
-						<div id="{{ slider_id }}" class="carousel slide" data-bs-touch="true" data-bs-interval="false">
+						{% comment %} debug-1: อันนี้แสดงให้เห็นว่า ตอนส่งข้อมูลมีการ group ข้อมูล 2 แบบ (ดูที่หน้า 8 กับ 28) 
+						แต่อันที่เหมือนกันมากๆ ในหน้า 28 ที่ควรจะ group กัน แต่จริงๆมันไม่ได group กัน
+						=> แปลว่าเราต้องไปดูว่ามัน group ข้อมูลยังไง แก้ได้ไหม หรือมันแก้ไม่ได้  {% endcomment %}
+						debug - {{ curriculum_major_admission_criterias }} <br>
+						debug - {{ criterias }} <br>
+						<div id="{{ slider_id }}" class="carousel slide pb-5" data-bs-touch="true" data-bs-interval="false">
 							
 							{% comment %} indicator {% endcomment %}
 							<div class="carousel-indicators px-2">
@@ -71,8 +74,10 @@
 							</div>
 
 							{% comment %} slider child {% endcomment %}
-							<div class="carousel-inner">
+							<div class="carousel-inner ">
+								{% comment "" %}
 								
+								{% endcomment %}
 								{% comment %} เงื่อนไขขั้นต่ำ && เกณฑ์การพิจารณา {% endcomment %}
 								<div class="carousel-item active">
 									{% with criterias.0 as admission_criteria %}
@@ -94,17 +99,21 @@
 										{% endfor %}
 								{% endif %}
 
+								
+
 							</div>
 
 							{# arrows #}
-							<button class="carousel-control-prev" type="button" data-bs-target="#{{ slider_id }}" data-bs-slide="prev">
-									<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-									<span class="visually-hidden">Previous</span>
-							</button>
-							<button class="carousel-control-next" type="button" data-bs-target="#{{ slider_id }}" data-bs-slide="next">
-									<span class="carousel-control-next-icon" aria-hidden="true"></span>
-									<span class="visually-hidden">Next</span>
-							</button>
+							{% comment %} show arrow only when criteria is more than 1 {% endcomment %}
+							{% if criteria_count > 1 %}
+								<button class="carousel-control-prev" type="button" data-bs-target="#{{ slider_id }}" data-bs-slide="prev">
+										<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+								</button>
+								<button class="carousel-control-next" type="button" data-bs-target="#{{ slider_id }}" data-bs-slide="next">
+										<span class="carousel-control-next-icon" aria-hidden="true"></span>
+								</button>
+							{% endif %}
+
 						</div>
 						{% endwith %}
 					{% endwith %}

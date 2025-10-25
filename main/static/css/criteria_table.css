@@ -1,7 +1,7 @@
 .faculty-title {
-    color: black;
-    font-weight: bold;
-    margin-top: 2rem;
+  color: black;
+  font-weight: bold;
+  margin-top: 2rem;
 }
 
 .major-block {
@@ -9,40 +9,67 @@
 }
 
 .major-title {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; 
-    align-items: center;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .major-title.collapsed {
-  border: 10px solid #E5E5E5;
-  background-color: #E5E5E5;
+  border: 10px solid #e5e5e5;
+  background-color: #e5e5e5;
 }
 
 .major-title:not(.collapsed) {
-  border: 10px solid #BEE5EB;
-  background-color: #BEE5EB;
+  border: 10px solid #bee5eb;
+  background-color: #bee5eb;
 }
 
 .condition {
-  border: 2px solid #BEE5EB;
+  border: 2px solid #bee5eb;
   width: 100%;
   padding: 20px;
   padding-top: 10px;
 }
 
 .min-criteria-title {
-    font-size: 1.2rem;
-    font-weight: bold;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .list-child {
   margin-left: 2rem;
 }
 
-/* make active slide indicator black for easier to notice */
+/* ============================================ adjust bootstrap's table ============================================*/
 .carousel-indicators .active {
   background-color: black !important;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  top: auto;
+  bottom: 0;
+  transform: none;
+  border: none;
+  background: none;
+  box-shadow: none;
+  outline: none;
+  bottom: 0;
+  width: 5%;
+  aspect-ratio: 1 / 1;
+  opacity: 1 !important;
+  border: black;
+  border-radius: 10px;
+  background-color: black;
+}
+
+.carousel-control-next-icon {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'><path d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708'/></svg>");
+  opacity: 1 !important;
+}
+
+.carousel-control-prev-icon {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'><path d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0'/></svg>");
 }
