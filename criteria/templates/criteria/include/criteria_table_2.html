@@ -74,33 +74,14 @@
 							</div>
 
 							{% comment %} slider child {% endcomment %}
-							<div class="carousel-inner ">
-								{% comment "" %}
-								
-								{% endcomment %}
-								{% comment %} เงื่อนไขขั้นต่ำ && เกณฑ์การพิจารณา {% endcomment %}
-								<div class="carousel-item active">
-									{% with criterias.0 as admission_criteria %}
-										{% include "criteria/include/criteria_table_scorecriteria_cols_2.html" %}
-									{% endwith %}
+							<div class="carousel-inner">
+							{% for item in criterias %}
+								<div class="carousel-item {% if forloop.first %}active{% endif %}">
+								{% with item as admission_criteria %}
+									{% include "criteria/include/criteria_table_scorecriteria_cols_2.html" %}
+								{% endwith %}
 								</div>
-
-								{% comment %} กรณีที่มีเงื่อนไขมากกว่า 1 ให้แสดงให้ครบ (เงื่อนไขขั้นต่ำ && เกณฑ์การพิจารณา) {% endcomment %}
-								{% if criteria_count > 0 %}
-										{% for item in criterias %}
-											{% comment %} debug - {{ criterias }} <br> {% endcomment %}
-											{% if not forloop.first %}
-												<div class="carousel-item">
-													{% with item as admission_criteria %}
-														{% include "criteria/include/criteria_table_scorecriteria_cols_2.html" %}
-													{% endwith %}
-												</div>
-											{% endif %}
-										{% endfor %}
-								{% endif %}
-
-								
-
+							{% endfor %}
 							</div>
 
 							{# arrows #}
