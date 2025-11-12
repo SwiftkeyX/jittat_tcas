@@ -179,10 +179,12 @@ def combine_criteria_rows(rows):
                     deleted_major_ids.add(mc.id)
     # pprint.pprint(combined_rows)
     
-    # create combine_row 2
-    combined_rows_again = []
-    for major_id in major_slots:
-        ...
+    # merge round 2 for case that have the same major id
+    # combined_rows_again = []
+    # for major_id in major_slots:
+    #     slots = major_slots[major_id]
+    #     if len(slots) > 1:
+            
 
     # Filter out deleted entries
     output_rows = []
@@ -201,7 +203,7 @@ def combine_criteria_rows(rows):
                 'major_count': len(output_majors),
                 'criteria_count': len(r['criterias']),
             })
-    pprint.pprint(output_rows)
+    # pprint.pprint(output_rows)
     
     return output_rows + combined_rows
         
@@ -527,7 +529,7 @@ def test_view(request, project_id, faculty_id=None):
             print("admission_criterias: ", model_to_dict(i))
             print()
     
-    
+    pprint.pprint(admission_criteria_rows)
     return render(request,
                   'criteria/test.html',
                   {'project': project,

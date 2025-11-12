@@ -6,7 +6,7 @@
     {% with curriculum_major_admission_criterias=row.majors criterias=row.criterias major_count=row.major_count criteria_count=row.criteria_count %}
       {% if is_faculty_row_visible %}
 		{% with collapse_faculty_id=criterias.0.faculty.id majorcriteria=curriculum_major_admission_criterias.0 %} 
-		{% with collapse_major_id=majorcriteria.id%}
+		{% with collapse_major_id=majorcriteria.id %}
 			{% ifchanged criterias.0.faculty %}
 				<!-- คณะ -->
 				 <div class="d-flex px-2 align-items-center faculty-title" type="button" data-bs-toggle="collapse" data-bs-target="#{{ collapse_faculty_id }}" aria-expanded="false" aria-controls="{{ collapse_faculty_id }}">
@@ -61,6 +61,7 @@
 						debug - {{i.curriculum_major_id}}
 						{% endfor %} <br>
 						debug - {{ criterias }} <br>
+						debug - {{ criterias.0.additional_name }} <br>
 						<div id="{{ slider_id }}" class="carousel slide pb-5" data-bs-touch="true" data-bs-interval="false">
 							
 							{% comment %} child indicator {% endcomment %}
