@@ -9,6 +9,7 @@ from .models import CurriculumMajor, MajorCuptCode, AdmissionCriteria
 
 # debug
 from django.forms.models import model_to_dict
+import pprint
 
 HIDE_CRITERIA = False
 
@@ -136,10 +137,17 @@ def sort_admission_criteria_rows(admission_criteria_rows):
 
     return [item[4] for item in sorted(lst)]
 
+# merge the major with same criteria => if a major's slot is 0, then let it merge with the same major with same criteria  
 def combine_criteria_rows(rows):
-    major_slots = {}
 
+    # Groups all rows by major_id.
+    # {
+    #   101: [(0, mc_obj_1, crit_1), (1, mc_obj_2, crit_2)],
+    #   102: [(2, mc_obj_3, crit_3)],
+    # }
+    major_slots = {}
     for r in rows:
+        
         curriculum_major_admission_criterias = r['majors']
         for mc in curriculum_major_admission_criterias:
             major = mc.curriculum_major
@@ -147,14 +155,18 @@ def combine_criteria_rows(rows):
             if major_id not in major_slots:
                 major_slots[major_id] = []
             major_slots[major_id].append((mc.slots, mc, r['criterias'][0]))
-
+    # debug
+    # pprint.pprint(major_slots)
+            
+            
+    # Combine majors that appear multiple times (merge the 0 slot with non-0 slot)
     combined_rows = []
     deleted_major_ids = set()
             
     for major_id in major_slots:
         slots = major_slots[major_id]
         if len(slots) > 1:
-            non_zero_mc = [s for s in slots if s[0] > 0]
+            non_zero_mc = [s for s in slots if s[0] > 0] #s[0] is slots => check that if one of the major criteria receive more that 0 slot
             if len(non_zero_mc) == 1:
                 combined_rows.append({
                     'majors': [non_zero_mc[0][1]],
@@ -165,7 +177,14 @@ def combine_criteria_rows(rows):
 
                 for _,mc,_ in slots:
                     deleted_major_ids.add(mc.id)
+    # pprint.pprint(combined_rows)
+    
+    # create combine_row 2
+    combined_rows_again = []
+    for major_id in major_slots:
+        ...
 
+    # Filter out deleted entries
     output_rows = []
 
     for r in rows:
@@ -182,7 +201,8 @@ def combine_criteria_rows(rows):
                 'major_count': len(output_majors),
                 'criteria_count': len(r['criterias']),
             })
-
+    pprint.pprint(output_rows)
+    
     return output_rows + combined_rows
         
 def prepare_admission_criteria(admission_criterias, curriculum_majors, combine_majors=False):
@@ -209,19 +229,20 @@ def prepare_admission_criteria(admission_criterias, curriculum_majors, combine_m
     if combine_majors:
         admission_criteria_rows = combine_criteria_rows(admission_criteria_rows)
     
-    # debug wat is admission_criterai_rows? => 
-    # for i in admission_criteria_rows[:10]:
-    #     print("debug here", i)
+    # debug: how is some the data group together, but some isn't
+    # for i in admission_criteria_rows:
+    #     criterias = [model_to_dict(c) for c in i["criterias"]]
+    #     majors = [model_to_dict(m) for m in i["majors"]]
+    #     for crit in criterias:
+    #         if crit["id"] == 2068:
+    #             print("debug here", criterias)
+    #             print()
     
-    # for i in admission_criteria_rows[:2]:
-    #     values = i.values()
-    #     for j in (values):
-    #         inside2 = j
-    #         if isinstance(inside2, list):
-    #             for k in inside2:
-    #                 print("debug inside", k)
-    #                 print(model_to_dict(k))
-    #     print("")
+    # debug more inside
+    # for i in admission_criterias:
+    #     admission_criterias = model_to_dict(i)
+    #     print("debug here", admission_criterias)       
+    #     print()             
     
     return sort_admission_criteria_rows(admission_criteria_rows), free_curriculum_majors
 

@@ -1,8 +1,8 @@
 {% for row in admission_criteria_rows %}
   {% comment %} <div>main- {{admission_criteria_rows}}</div> {% endcomment %}
   {% comment %} debug here - {{row}} <br> {% endcomment %}
-  {% comment %} ตรงนี้หาว่าทำไม admission_criteria_rows.majors คืออะไร => มันหาอะไรใน Db ถึงได้ค่ากลับมาเป็นลิสที่มีเงื่อนไขเดียวกัน => มันคือ CurriculumMajorAdmissionCriteria ที่ใช้ AdmissionCriteria เดียวกัน {% endcomment %}
-  {% comment %} ต่อไปจะหาว่า admission_criteria_rows.criterias คืออะไร  {% endcomment %}
+  {% comment %} ตรงนี้หาว่าทำไม row.majors คืออะไร => มันหาอะไรใน Db ถึงได้ค่ากลับมาเป็นลิสที่มีเงื่อนไขเดียวกัน => มันคือ CurriculumMajorAdmissionCriteria ที่ใช้ AdmissionCriteria เดียวกัน {% endcomment %}
+  {% comment %} ต่อไปจะหาว่า row.criterias คืออะไร  {% endcomment %}
     {% with curriculum_major_admission_criterias=row.majors criterias=row.criterias major_count=row.major_count criteria_count=row.criteria_count %}
       {% if is_faculty_row_visible %}
 		{% with collapse_faculty_id=criterias.0.faculty.id majorcriteria=curriculum_major_admission_criterias.0 %} 
@@ -57,10 +57,13 @@
 						แต่อันที่เหมือนกันมากๆ ในหน้า 28 ที่ควรจะ group กัน แต่จริงๆมันไม่ได group กัน
 						=> แปลว่าเราต้องไปดูว่ามัน group ข้อมูลยังไง แก้ได้ไหม หรือมันแก้ไม่ได้  {% endcomment %}
 						debug - {{ curriculum_major_admission_criterias }} <br>
+						{% for i in curriculum_major_admission_criterias %}
+						debug - {{i.curriculum_major_id}}
+						{% endfor %} <br>
 						debug - {{ criterias }} <br>
 						<div id="{{ slider_id }}" class="carousel slide pb-5" data-bs-touch="true" data-bs-interval="false">
 							
-							{% comment %} indicator {% endcomment %}
+							{% comment %} child indicator {% endcomment %}
 							<div class="carousel-indicators px-2">
 								{% for item in criterias %}
 									<button type="button"
